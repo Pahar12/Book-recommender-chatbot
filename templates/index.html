@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BookWise AI - Your intelligent book recommender chatbot powered by Generative AI. Get personalized book suggestions, summaries, and literary guidance.">
+    <title>BookWise AI — Intelligent Book Recommender</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Ambient Background -->
+    <div class="ambient-bg">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">📚</div>
+                    <div class="logo-text">
+                        <h1>BookWise AI</h1>
+                        <span class="logo-subtitle">Literary Companion</span>
+                    </div>
+                </div>
+                <button class="sidebar-toggle" id="sidebarClose" aria-label="Close sidebar">✕</button>
+            </div>
+
+            <!-- API Status -->
+            <div class="status-card" id="statusCard">
+                <div class="status-dot" id="statusDot"></div>
+                <span id="statusText">Checking...</span>
+            </div>
+
+            <!-- Controls -->
+            <div class="controls-section">
+                <h3 class="section-title">⚙️ AI Controls</h3>
+
+                <div class="control-group">
+                    <label for="temperatureSlider">
+                        <span>🌡️ Temperature</span>
+                        <span class="control-value" id="tempValue">0.7</span>
+                    </label>
+                    <input type="range" id="temperatureSlider" min="0" max="1" step="0.1" value="0.7">
+                    <p class="control-hint">Low = factual · High = creative</p>
+                </div>
+
+                <div class="control-group">
+                    <label for="topPSlider">
+                        <span>🎯 Top-P</span>
+                        <span class="control-value" id="topPValue">0.9</span>
+                    </label>
+                    <input type="range" id="topPSlider" min="0.1" max="1" step="0.1" value="0.9">
+                    <p class="control-hint">Low = focused · High = diverse</p>
+                </div>
+            </div>
+
+            <!-- Document Upload -->
+            <div class="controls-section">
+                <h3 class="section-title">📄 Document Q&A</h3>
+                <div class="upload-zone" id="uploadZone">
+                    <input type="file" id="fileInput" accept=".txt,.md,.csv,.json,.html,.xml" hidden>
+                    <div class="upload-content">
+                        <span class="upload-icon">📁</span>
+                        <span class="upload-text">Drop file or click to upload</span>
+                        <span class="upload-hint">TXT, MD, CSV, JSON, HTML, XML</span>
+                    </div>
+                </div>
+                <div class="upload-status" id="uploadStatus" style="display:none;"></div>
+            </div>
+
+            <!-- Actions -->
+            <div class="sidebar-actions">
+                <button class="btn btn-outline" id="clearBtn">🗑️ Clear Chat</button>
+                <button class="btn btn-outline" id="exportBtn">📋 Export Chat</button>
+            </div>
+
+            <!-- Features -->
+            <div class="features-list">
+                <div class="feature-item"><span>🧠</span> Conversation Memory</div>
+                <div class="feature-item"><span>🌍</span> Multilingual Support</div>
+                <div class="feature-item"><span>📄</span> Document Q&A</div>
+                <div class="feature-item"><span>⚡</span> Gemini 2.0 Flash</div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-main">
+            <!-- Header -->
+            <header class="chat-header">
+                <button class="sidebar-toggle mobile-toggle" id="sidebarOpen" aria-label="Open sidebar">☰</button>
+                <div class="header-info">
+                    <h2>BookWise AI</h2>
+                    <span class="header-subtitle" id="langIndicator">English</span>
+                </div>
+                <div class="header-actions">
+                    <span class="message-counter" id="msgCounter">0 messages</span>
+                </div>
+            </header>
+
+            <!-- Messages Area -->
+            <div class="messages-container" id="messagesContainer">
+                <!-- Welcome Screen -->
+                <div class="welcome-screen" id="welcomeScreen">
+                    <div class="welcome-icon">📚</div>
+                    <h2 class="welcome-title">Welcome to BookWise AI</h2>
+                    <p class="welcome-subtitle">Your intelligent literary companion powered by Generative AI</p>
+                    <div class="suggestions-section">
+                        <h3 class="suggestions-label">Quick Actions</h3>
+                        <div class="suggestions-grid" id="suggestionsGrid">
+                            <!-- Suggestions loaded dynamically -->
+                        </div>
+                    </div>
+                    <div class="features-highlight">
+                        <div class="feature-row">
+                            <span>💬</span> <span>Chat with AI about books</span>
+                        </div>
+                        <div class="feature-row">
+                            <span>🎯</span> <span>Personalized recommendations</span>
+                        </div>
+                        <div class="feature-row">
+                            <span>📚</span> <span>Book series and trending picks</span>
+                        </div>
+                        <div class="feature-row">
+                            <span>📄</span> <span>Upload & discuss documents</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-area">
+                <div class="input-wrapper">
+                    <textarea id="messageInput" placeholder="Ask me about books, get recommendations, or upload a document..." rows="1" aria-label="Type your message"></textarea>
+                    <button class="send-btn" id="sendBtn" aria-label="Send message">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+                <p class="input-hint">BookWise AI can make mistakes. Verify book details independently.</p>
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

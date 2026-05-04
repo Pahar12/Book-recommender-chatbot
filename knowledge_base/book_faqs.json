@@ -1,0 +1,65 @@
+{
+  "domain": "Book Recommendations & Literary Knowledge",
+  "description": "Curated FAQs and domain knowledge for the AI Book Recommender chatbot",
+  "faqs": [
+    {
+      "question": "How do I find a good book to read?",
+      "answer": "Start by identifying genres you enjoy, then explore bestseller lists, award winners (like Pulitzer, Booker Prize, Hugo Awards), and curated recommendations. Consider your mood — sometimes a light read is perfect, other times you want something thought-provoking."
+    },
+    {
+      "question": "What are the most popular book genres?",
+      "answer": "The most popular genres include Fiction (Literary, Contemporary), Mystery/Thriller, Science Fiction, Fantasy, Romance, Historical Fiction, Horror, Non-Fiction (Self-Help, Biography, Science, History), Young Adult, and Children's Literature."
+    },
+    {
+      "question": "How should beginners start reading?",
+      "answer": "Start with shorter books or popular page-turners. Try genres that align with movies or TV shows you enjoy. Consider audiobooks if traditional reading feels daunting. Set small goals like 20 pages a day."
+    },
+    {
+      "question": "What are classic must-read books?",
+      "answer": "Some timeless classics include: 'To Kill a Mockingbird' by Harper Lee, '1984' by George Orwell, 'Pride and Prejudice' by Jane Austen, 'The Great Gatsby' by F. Scott Fitzgerald, 'One Hundred Years of Solitude' by Gabriel García Márquez, and 'Crime and Punishment' by Fyodor Dostoevsky."
+    },
+    {
+      "question": "What are the best books for self-improvement?",
+      "answer": "Top self-improvement books include: 'Atomic Habits' by James Clear, 'Thinking, Fast and Slow' by Daniel Kahneman, 'The 7 Habits of Highly Effective People' by Stephen Covey, 'Mindset' by Carol Dweck, and 'Deep Work' by Cal Newport."
+    },
+    {
+      "question": "How do book awards work?",
+      "answer": "Major book awards include the Pulitzer Prize (American fiction/non-fiction), the Booker Prize (English-language fiction), the Nobel Prize in Literature (lifetime achievement), Hugo/Nebula Awards (science fiction/fantasy), and the National Book Award. Each has its own jury and selection criteria."
+    },
+    {
+      "question": "What is the difference between fiction and non-fiction?",
+      "answer": "Fiction is imaginative storytelling — novels, short stories, and novellas created from the author's imagination. Non-fiction is based on real events, facts, and information — including biographies, memoirs, essays, journalism, and academic works."
+    },
+    {
+      "question": "How do I choose books for children?",
+      "answer": "Consider the child's age, reading level, and interests. Look for age-appropriate content, engaging illustrations (for younger readers), and themes that promote curiosity and empathy. Popular choices include Dr. Seuss for early readers, 'Harry Potter' for middle-grade, and Rick Riordan for tweens."
+    }
+  ],
+  "common_intents": [
+    "recommend_by_genre",
+    "recommend_by_mood",
+    "recommend_by_author",
+    "recommend_similar_book",
+    "book_summary",
+    "reading_list",
+    "book_comparison",
+    "author_information",
+    "reading_advice",
+    "book_club_suggestions"
+  ],
+  "genre_taxonomy": {
+    "fiction": ["literary_fiction", "contemporary", "historical_fiction", "science_fiction", "fantasy", "mystery", "thriller", "romance", "horror", "dystopian", "magical_realism", "satire"],
+    "non_fiction": ["biography", "memoir", "self_help", "science", "history", "philosophy", "psychology", "business", "travel", "true_crime", "essays", "journalism"],
+    "special": ["young_adult", "middle_grade", "childrens", "graphic_novels", "poetry", "drama", "short_stories"]
+  },
+  "mood_mappings": {
+    "happy": ["feel-good fiction", "humor", "romantic comedy", "adventure"],
+    "sad": ["literary fiction", "contemporary drama", "poetry"],
+    "adventurous": ["fantasy", "science fiction", "thriller", "adventure"],
+    "thoughtful": ["philosophy", "literary fiction", "psychology", "essays"],
+    "relaxed": ["cozy mystery", "romance", "light contemporary fiction"],
+    "curious": ["science", "history", "biography", "popular science"],
+    "motivated": ["self-help", "business", "biography", "sports"],
+    "scared": ["horror", "psychological thriller", "gothic fiction"]
+  }
+}
