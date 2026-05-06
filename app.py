@@ -44,7 +44,8 @@ def track_preferences(session_id, user_message):
     
     # Track genres mentioned
     genres = ["mystery", "thriller", "sci-fi", "fantasy", "romance", "horror", 
-              "literary fiction", "historical", "adventure", "self-help", "non-fiction"]
+              "literary fiction", "historical", "adventure", "self-help", "non-fiction",
+              "educational", "education", "learning", "academic", "study"]
     for genre in genres:
         if genre in msg_lower and genre not in prefs["genres"]:
             prefs["genres"].append(genre)
@@ -154,6 +155,7 @@ def generate_fallback_response(user_message):
         "mystery_thriller": ["mystery", "thriller", "suspense", "detective", "crime", "whodunit"],
         "science_fiction_fantasy": ["sci-fi", "science fiction", "fantasy", "space", "magic", "dragon", "cyberpunk"],
         "self_improvement": ["self-help", "self-improvement", "productivity", "motivation", "habits", "psychology", "mindset"],
+        "educational_books": ["educational", "education", "learning", "study", "academic", "school", "college", "university", "textbook", "science", "history", "coding"],
         "indian_literature": ["indian", "india", "hindi", "desi", "bharat"],
         "all_time_classics": ["classic", "classics", "timeless", "greatest", "all-time"],
         "modern_bestsellers": ["modern", "recent", "new", "bestseller", "trending", "2020", "2021", "2022", "2023", "2024"],
@@ -162,6 +164,16 @@ def generate_fallback_response(user_message):
     }
 
     # Check for series, trending, beginner books
+    if any(w in msg for w in ["educational", "education", "learning", "academic", "study", "school", "college", "university", "coding", "textbook"]):
+        educational = BOOK_DATA.get("curated_recommendations", {}).get("educational_books", [])[:5]
+        if educational:
+            parts = ["🎓 **Educational book recommendations:**\n"]
+            for b in educational:
+                parts.append(f"**{b['title']}** by {b['author']}\n"
+                             f"   📌 *{b['genre']}* ({b['year']}) — {b['description']}\n")
+            parts.append("\n💡 *Great for learning, study, and academic curiosity!*")
+            return "\n".join(parts)
+
     if any(w in msg for w in ["series", "binge", "sequential", "ongoing"]):
         series = BOOK_DATA.get("book_series", {}).get("popular_series", [])[:5]
         if series:
