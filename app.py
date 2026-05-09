@@ -8,6 +8,8 @@ import os
 import json
 import uuid
 import tempfile
+import re
+import unicodedata
 from datetime import datetime
 from io import StringIO
 from functools import wraps
@@ -74,6 +76,17 @@ def load_json(filename):
     except Exception as e:
         print(f"⚠️  Warning: Could not load {filename}: {e}")
         return {}
+
+
+def normalize_text(value: str) -> str:
+    """Normalize text for accent-insensitive, punctuation-insensitive matching."""
+    if not value:
+        return ""
+    normalized = unicodedata.normalize("NFKD", value)
+    normalized = "".join(char for char in normalized if not unicodedata.combining(char))
+    normalized = re.sub(r"[^a-zA-Z0-9\s]", " ", normalized.lower())
+    normalized = re.sub(r"\s+", " ", normalized).strip()
+    return normalized
 
 BOOK_FAQS = load_json("book_faqs.json")
 BOOK_DATA = load_json("book_data.json")
@@ -634,7 +647,8 @@ def get_trending():
 @app.route("/api/author", methods=["GET"])
 def get_author():
     """Get author information and introduction"""
-    author_name = request.args.get("name", "").lower().strip()
+    author_name = request.args.get("name", "").strip()
+    normalized_name = normalize_text(author_name)
     
     if not author_name:
         return jsonify({"error": "Author name required"}), 400
@@ -648,7 +662,7 @@ def get_author():
     
     # Try exact key match first
     for key, author in authors.items():
-        if author.get("name", "").lower() == author_name:
+        if normalize_text(author.get("name", "")) == normalized_name:
             found_author = author
             found_key = key
             break
@@ -656,8 +670,8 @@ def get_author():
     # If not found, try partial name matching
     if not found_author:
         for key, author in authors.items():
-            author_full_name = author.get("name", "").lower()
-            if author_name in author_full_name or author_full_name in author_name:
+            author_full_name = normalize_text(author.get("name", ""))
+            if normalized_name in author_full_name or author_full_name in normalized_name:
                 found_author = author
                 found_key = key
                 break
@@ -706,7 +720,7 @@ Format as a detailed author profile."""
             "major_works": found_author.get("major_works", []),
             "awards": found_author.get("awards", []),
             "quote": found_author.get("quote", ""),
-            "interested_facts": found_author.get("interesting_facts", []),
+            "interesting_facts": found_author.get("interesting_facts", []),
             "influenced_by": found_author.get("influenced_by", [])
         }
     })

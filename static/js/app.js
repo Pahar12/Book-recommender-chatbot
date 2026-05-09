@@ -1120,6 +1120,28 @@ async function searchAuthor() {
         text.className = 'message-text';
         
         const profile = data.profile;
+
+        if (typeof profile === 'string') {
+            text.dataset.rawText = profile;
+            text.innerHTML = markdownToHtml(profile);
+
+            const time = document.createElement('div');
+            time.className = 'message-time';
+            time.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            bubble.append(text, time);
+            message.append(avatar, bubble);
+            elements.messagesContainer.appendChild(message);
+
+            authorInput.value = '';
+            persistConversationFromDOM();
+            renderChatHistoryList();
+            scrollToBottom();
+
+            NotificationManager.show(`Found ${authorName}!`, 'success');
+            return;
+        }
+
         let profileHtml = `**${profile.name}** - ${profile.nationality}`;
         
         if (profile.birth_year) {
@@ -1159,9 +1181,9 @@ async function searchAuthor() {
             profileHtml += `\n\n*"${profile.quote}"*`;
         }
         
-        if (profile.interested_facts && profile.interested_facts.length > 0) {
+        if (profile.interesting_facts && profile.interesting_facts.length > 0) {
             profileHtml += `\n\n**Interesting Facts:**`;
-            profile.interested_facts.forEach(fact => {
+            profile.interesting_facts.forEach(fact => {
                 profileHtml += `\n- ${fact}`;
             });
         }
