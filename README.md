@@ -16,7 +16,8 @@ An AI-powered book recommendation chatbot built with **Flask** and **Google Gemi
 | 🌡️ **Temperature Control** | Adjust randomness/creativity of responses |
 | 🎯 **Top-P Control** | Control probability mass of token selection |
 | 📊 **Knowledge Base** | Curated FAQs, genre taxonomy, and book database |
-| 💾 **Fallback Mode** | Works without API key using local knowledge base |
+| 💾 **Session Storage** | In-memory conversations with localStorage backup |
+| ♻️ **Graceful Fallback** | Works without API key using local knowledge base |
 
 ## 🏗️ Architecture
 
@@ -101,3 +102,62 @@ Auto-detects and responds in: English, Hindi, Spanish, French, German, Japanese,
 - **Language Detection**: langdetect
 - **Frontend**: HTML5, CSS3 (custom dark theme), Vanilla JavaScript
 - **Design**: Glassmorphism, ambient animations, responsive layout
+- **Storage**: Session-based (in-memory) with localStorage backup
+
+## 💾 Data Storage & Persistence
+
+### Current Implementation: Session-Based Storage
+
+BookWise AI uses a **graceful fallback architecture** for data storage:
+
+```
+Primary Path (if available):
+  SQLite Database (SQLAlchemy ORM)
+    ↓ On compatibility issues, automatically falls back to:
+  In-Memory Sessions + Browser localStorage
+```
+
+### What Gets Saved
+
+✅ **During Session (In-Memory)**
+- Conversation history
+- Message metadata
+- User session ID
+- Preferences (temperature, top-p)
+
+✅ **Persistent (Browser localStorage)**
+- Chat history (with timestamps)
+- Recent conversations list
+- User preferences
+- Chat export data
+
+❌ **Not Persisted (yet)**
+- Cross-session history (requires database)
+- User profiles (requires authentication)
+- Long-term analytics
+
+### Session Lifetime
+
+| When | Data | Status |
+|------|------|--------|
+| During active chat | In memory + localStorage | ✅ Available |
+| After page reload | localStorage synced | ✅ Restored |
+| After browser close | localStorage persists | ✅ Can reopen |
+| Server restart | In-memory cleared | ℹ️ New session |
+
+**To keep conversations permanent, export before closing the browser!**
+
+### Database Infrastructure (Ready for Upgrade)
+
+The app is prepared for persistent database storage when Python 3.14 compatibility improves:
+
+```python
+# Available models in database.py:
+- User (profiles, preferences)
+- Conversation (session metadata)
+- Message (chat history)
+- Document (uploaded files metadata)
+- DocumentChunk (RAG indexing)
+```
+
+See [DATABASE_STRATEGY.md](DATABASE_STRATEGY.md) for detailed information.

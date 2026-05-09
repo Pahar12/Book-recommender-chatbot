@@ -2,17 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description" content="BookWise AI - Your intelligent book recommender chatbot powered by Generative AI. Get personalized book suggestions, summaries, and literary guidance.">
+    <meta name="theme-color" content="#0a0a0f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>BookWise AI — Intelligent Book Recommender</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.11.1/styles/github-dark.min.css">
     <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.11.1/lib/highlight.min.js" defer></script>
 </head>
 <body>
+    <!-- Skip to main content link for accessibility -->
+    <a href="#mainContent" class="sr-only" tabindex="0">Skip to main content</a>
+    
+    <!-- Accessibility status announcements -->
+    <div id="a11yAnnouncements" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+    <div id="a11yAlerts" aria-live="assertive" aria-atomic="true" role="alert" class="sr-only"></div>
+
     <!-- Ambient Background -->
-    <div class="ambient-bg">
+    <div class="ambient-bg" aria-hidden="true">
         <div class="orb orb-1"></div>
         <div class="orb orb-2"></div>
         <div class="orb orb-3"></div>
@@ -20,126 +33,145 @@
 
     <div class="app-container">
         <!-- Sidebar -->
-        <aside class="sidebar" id="sidebar">
+        <aside class="sidebar" id="sidebar" aria-label="Navigation sidebar">
             <div class="sidebar-header">
-                <div class="logo">
-                    <div class="logo-icon">📚</div>
+                <div class="logo" role="img" aria-label="BookWise AI - Literary Companion">
+                    <div class="logo-icon" aria-hidden="true">📚</div>
                     <div class="logo-text">
                         <h1>BookWise AI</h1>
                         <span class="logo-subtitle">Literary Companion</span>
                     </div>
                 </div>
-                <button class="sidebar-toggle" id="sidebarClose" aria-label="Close sidebar">✕</button>
+                <button class="sidebar-toggle" id="sidebarClose" aria-label="Close sidebar navigation" title="Close sidebar (Esc)">✕</button>
             </div>
 
             <!-- API Status -->
-            <div class="status-card" id="statusCard">
-                <div class="status-dot" id="statusDot"></div>
-                <span id="statusText">Checking...</span>
+            <div class="status-card" id="statusCard" role="status" aria-live="polite" aria-label="API Status">
+                <div class="status-dot" id="statusDot" aria-hidden="true"></div>
+                <span id="statusText" aria-label="Connection status">Checking...</span>
             </div>
 
             <!-- Controls -->
             <div class="controls-section">
-                <h3 class="section-title">⚙️ AI Controls</h3>
+                <h2 class="section-title">⚙️ AI Controls</h2>
 
                 <div class="control-group">
                     <label for="temperatureSlider">
                         <span>🌡️ Temperature</span>
-                        <span class="control-value" id="tempValue">0.7</span>
+                        <span class="control-value" id="tempValue" aria-live="polite">0.7</span>
                     </label>
-                    <input type="range" id="temperatureSlider" min="0" max="1" step="0.1" value="0.7">
+                    <input type="range" id="temperatureSlider" min="0" max="1" step="0.1" value="0.7" aria-label="Temperature setting: controls response creativity. Low values are factual, high values are creative.">
                     <p class="control-hint">Low = factual · High = creative</p>
                 </div>
 
                 <div class="control-group">
                     <label for="topPSlider">
                         <span>🎯 Top-P</span>
-                        <span class="control-value" id="topPValue">0.9</span>
+                        <span class="control-value" id="topPValue" aria-live="polite">0.9</span>
                     </label>
-                    <input type="range" id="topPSlider" min="0.1" max="1" step="0.1" value="0.9">
+                    <input type="range" id="topPSlider" min="0.1" max="1" step="0.1" value="0.9" aria-label="Top-P setting: controls response diversity. Low values are focused, high values are diverse.">
                     <p class="control-hint">Low = focused · High = diverse</p>
                 </div>
             </div>
 
             <!-- Document Upload -->
             <div class="controls-section">
-                <h3 class="section-title">📄 Document Q&A</h3>
-                <div class="upload-zone" id="uploadZone">
-                    <input type="file" id="fileInput" accept=".txt,.md,.csv,.json,.html,.xml" hidden>
-                    <div class="upload-content">
+                <h2 class="section-title">📄 Document Q&A</h2>
+                <div class="upload-zone" id="uploadZone" role="button" tabindex="0" aria-label="Upload document area. Click or drag files here.">
+                    <input type="file" id="fileInput" accept=".txt,.md,.csv,.json,.html,.xml,.pdf,.docx" hidden aria-label="Select document file to upload">
+                    <div class="upload-content" aria-hidden="true">
                         <span class="upload-icon">📁</span>
                         <span class="upload-text">Drop file or click to upload</span>
-                        <span class="upload-hint">TXT, MD, CSV, JSON, HTML, XML</span>
+                        <span class="upload-hint">TXT, MD, CSV, JSON, HTML, XML, PDF, DOCX</span>
                     </div>
                 </div>
-                <div class="upload-status" id="uploadStatus" style="display:none;"></div>
+                <div class="upload-status" id="uploadStatus" role="status" aria-live="polite" style="display:none;"></div>
             </div>
 
             <!-- Actions -->
             <div class="sidebar-actions">
-                <button class="btn btn-outline" id="clearBtn">🗑️ Clear Chat</button>
-                <button class="btn btn-outline" id="exportBtn">📋 Export Chat</button>
+                <button class="btn btn-outline" id="newChatBtn" title="Start a new conversation (Ctrl+N)">➕ New Chat</button>
+                <button class="btn btn-outline" id="clearBtn" title="Clear current chat history">🗑️ Clear Chat</button>
+                <button class="btn btn-outline" id="exportBtn" title="Export chat as JSON">📋 Export Chat</button>
+            </div>
+
+            <div class="controls-section">
+                <h2 class="section-title">📚 Explore Books</h2>
+                <div class="book-actions">
+                    <button class="btn btn-outline book-action" data-book-category="series" title="Show book series">Series</button>
+                    <button class="btn btn-outline book-action" data-book-category="trending" title="Show trending books">Trending</button>
+                    <button class="btn btn-outline book-action" data-book-category="beginner" title="Show beginner books">Beginner</button>
+                    <button class="btn btn-outline book-action" data-book-category="short" title="Show quick reads">Quick Reads</button>
+                </div>
+            </div>
+
+            <div class="controls-section history-section">
+                <h2 class="section-title">🕘 Recent Chats</h2>
+                <div class="chat-history-list" id="chatHistoryList" role="region" aria-label="Conversation history list"></div>
             </div>
 
             <!-- Features -->
-            <div class="features-list">
-                <div class="feature-item"><span>🧠</span> Conversation Memory</div>
-                <div class="feature-item"><span>🌍</span> Multilingual Support</div>
-                <div class="feature-item"><span>📄</span> Document Q&A</div>
-                <div class="feature-item"><span>⚡</span> Gemini 2.0 Flash</div>
+            <div class="features-list" aria-label="Key features">
+                <div class="feature-item" aria-label="Feature: Conversation Memory"><span aria-hidden="true">🧠</span> Conversation Memory</div>
+                <div class="feature-item" aria-label="Feature: Multilingual Support"><span aria-hidden="true">🌍</span> Multilingual Support</div>
+                <div class="feature-item" aria-label="Feature: Document Q&A"><span aria-hidden="true">📄</span> Document Q&A</div>
+                <div class="feature-item" aria-label="Feature: Gemini 2.0 Flash"><span aria-hidden="true">⚡</span> Gemini 2.0 Flash</div>
             </div>
         </aside>
 
         <!-- Main Chat Area -->
-        <main class="chat-main">
+        <main class="chat-main" id="mainContent" role="main" aria-label="Chat interface">
             <!-- Header -->
-            <header class="chat-header">
-                <button class="sidebar-toggle mobile-toggle" id="sidebarOpen" aria-label="Open sidebar">☰</button>
+            <header class="chat-header" role="banner">
+                <button class="sidebar-toggle mobile-toggle" id="sidebarOpen" aria-label="Open sidebar navigation" title="Open sidebar (Ctrl+\\)">☰</button>
                 <div class="header-info">
-                    <h2>BookWise AI</h2>
-                    <span class="header-subtitle" id="langIndicator">English</span>
+                    <h1>BookWise AI</h1>
+                    <span class="header-subtitle" id="langIndicator" role="status" aria-live="polite">English</span>
                 </div>
                 <div class="header-actions">
-                    <span class="message-counter" id="msgCounter">0 messages</span>
+                    <span class="message-counter" id="msgCounter" aria-live="polite" role="status">0 messages</span>
+                    <button class="icon-btn" id="themeToggle" aria-label="Toggle dark/light theme" title="Toggle theme (Ctrl+Shift+L)">🌙</button>
                 </div>
             </header>
 
             <!-- Messages Area -->
-            <div class="messages-container" id="messagesContainer">
+            <div class="messages-container" id="messagesContainer" role="log" aria-live="polite" aria-label="Chat messages">
                 <!-- Welcome Screen -->
-                <div class="welcome-screen" id="welcomeScreen">
-                    <div class="welcome-icon">📚</div>
+                <div class="welcome-screen" id="welcomeScreen" role="region" aria-label="Welcome section">
+                    <div class="welcome-icon" aria-hidden="true">📚</div>
                     <h2 class="welcome-title">Welcome to BookWise AI</h2>
                     <p class="welcome-subtitle">Your intelligent literary companion powered by Generative AI</p>
                     <div class="suggestions-section">
                         <h3 class="suggestions-label">Quick Actions</h3>
-                        <div class="suggestions-grid" id="suggestionsGrid">
+                        <div class="suggestions-grid" id="suggestionsGrid" role="list" aria-label="Suggested quick actions">
                             <!-- Suggestions loaded dynamically -->
                         </div>
                     </div>
-                    <div class="features-highlight">
+                    <div class="features-highlight" aria-label="Application features">
                         <div class="feature-row">
-                            <span>💬</span> <span>Chat with AI about books</span>
+                            <span aria-hidden="true">💬</span> <span>Chat with AI about books</span>
                         </div>
                         <div class="feature-row">
-                            <span>🎯</span> <span>Personalized recommendations</span>
+                            <span aria-hidden="true">🎯</span> <span>Personalized recommendations</span>
                         </div>
                         <div class="feature-row">
-                            <span>📚</span> <span>Book series and trending picks</span>
+                            <span aria-hidden="true">📚</span> <span>Book series and trending picks</span>
                         </div>
                         <div class="feature-row">
-                            <span>📄</span> <span>Upload & discuss documents</span>
+                            <span aria-hidden="true">📄</span> <span>Upload & discuss documents</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Input Area -->
-            <div class="input-area">
+            <div class="input-area" role="region" aria-label="Message input section">
                 <div class="input-wrapper">
-                    <textarea id="messageInput" placeholder="Ask me about books, get recommendations, or upload a document..." rows="1" aria-label="Type your message"></textarea>
-                    <button class="send-btn" id="sendBtn" aria-label="Send message">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <button class="icon-btn input-icon-btn" id="voiceBtn" aria-label="Voice input (Ctrl+Shift+V)" title="Activate voice input">🎤</button>
+                    <textarea id="messageInput" placeholder="Ask me about books, get recommendations, or upload a document..." rows="1" aria-label="Type your message here. Press Shift+Enter for new line, Enter to send." spellcheck="true"></textarea>
+                    <button class="icon-btn input-icon-btn stop-btn" id="stopBtn" aria-label="Stop generation" title="Stop AI generation" style="display:none;">⏹</button>
+                    <button class="send-btn" id="sendBtn" aria-label="Send message" title="Send message (Enter)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <line x1="22" y1="2" x2="11" y2="13"></line>
                             <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                         </svg>
