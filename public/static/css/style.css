@@ -446,39 +446,6 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); box-sha
     width: 100%;
 }
 
-.author-search {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-
-.author-input {
-    flex: 1;
-    padding: 10px 14px;
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    color: var(--text-primary);
-    font-size: 14px;
-    transition: var(--transition);
-}
-
-.author-input:focus {
-    outline: none;
-    border-color: var(--accent-primary);
-    background: rgba(124, 92, 252, 0.05);
-    box-shadow: 0 0 12px rgba(124, 92, 252, 0.15);
-}
-
-.author-input::placeholder {
-    color: var(--text-muted);
-}
-
-#authorSearchBtn {
-    padding: 10px 16px;
-    white-space: nowrap;
-}
-
 /* ─── Responsive ─────────────────────────────────── */
 @media (max-width: 768px) {
     .sidebar {

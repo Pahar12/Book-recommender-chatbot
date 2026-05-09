@@ -8,6 +8,20 @@ from datetime import datetime
 from typing import Generator, List, Dict, Any
 import google.generativeai as genai
 
+
+def is_gemini_quota_error(error: Exception) -> bool:
+    """Return True when Gemini rejects a request due to quota or rate limits."""
+    message = str(error).lower()
+    return any(keyword in message for keyword in [
+        "429",
+        "quota exceeded",
+        "rate limit",
+        "resourceexhausted",
+        "retry in",
+        "free_tier_requests",
+        "free_tier_input_token_count",
+    ])
+
 # ═══════════════════════════════════════════════════════════════
 #  ID GENERATION
 # ═══════════════════════════════════════════════════════════════
@@ -50,6 +64,13 @@ def stream_gemini_response(
                 yield chunk.text
     
     except Exception as e:
+        if is_gemini_quota_error(e):
+            yield (
+                "I’m temporarily using BookWise’s offline knowledge base because the Gemini free tier "
+                "has hit its quota. Ask again later, or continue with book recommendations and summaries right now."
+            )
+            return
+
         yield f"Error: {str(e)}"
 
 

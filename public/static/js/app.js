@@ -156,19 +156,6 @@ function setupEventListeners() {
         button.addEventListener('click', () => loadAndDisplayBooks(button.dataset.bookCategory));
     });
 
-    // Author search functionality
-    const authorSearchBtn = document.getElementById('authorSearchBtn');
-    const authorInput = document.getElementById('authorInput');
-    if (authorSearchBtn && authorInput) {
-        authorSearchBtn.addEventListener('click', () => searchAuthor());
-        authorInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                searchAuthor();
-            }
-        });
-    }
-
     window.addEventListener('beforeunload', persistConversationFromDOM);
 }
 
@@ -1081,117 +1068,6 @@ function hideWelcome() {
 
 function showWelcome() {
     elements.welcomeScreen.style.display = 'flex';
-}
-
-async function searchAuthor() {
-    const authorInput = document.getElementById('authorInput');
-    const authorName = authorInput?.value?.trim();
-    
-    if (!authorName) {
-        NotificationManager.show('Please enter an author name', 'error');
-        return;
-    }
-    
-    try {
-        hideWelcome();
-        LoadingManager.show('Searching for author information...');
-        
-        const response = await fetch(`/api/author?name=${encodeURIComponent(authorName)}`);
-        const data = await response.json();
-        
-        LoadingManager.hide();
-        
-        if (!response.ok) {
-            throw new Error(data.error || 'Author not found');
-        }
-        
-        // Display author information as a message
-        const message = document.createElement('div');
-        message.className = 'message assistant';
-
-        const avatar = document.createElement('div');
-        avatar.className = 'message-avatar';
-        avatar.textContent = '👤';
-
-        const bubble = document.createElement('div');
-        bubble.className = 'message-content';
-
-        const text = document.createElement('div');
-        text.className = 'message-text';
-        
-        const profile = data.profile;
-        let profileHtml = `**${profile.name}** - ${profile.nationality}`;
-        
-        if (profile.birth_year) {
-            profileHtml += `\n\n**Birth:** ${profile.birth_year}${profile.born_in ? ' in ' + profile.born_in : ''}`;
-            if (profile.death_year) {
-                profileHtml += `\n**Died:** ${profile.death_year}`;
-            }
-        }
-        
-        if (profile.biography) {
-            profileHtml += `\n\n**Biography:**\n${profile.biography}`;
-        }
-        
-        if (profile.literary_style) {
-            profileHtml += `\n\n**Literary Style:**\n${profile.literary_style}`;
-        }
-        
-        if (profile.themes) {
-            profileHtml += `\n\n**Major Themes:**\n${profile.themes}`;
-        }
-        
-        if (profile.major_works && profile.major_works.length > 0) {
-            profileHtml += `\n\n**Major Works:**`;
-            profile.major_works.forEach(work => {
-                profileHtml += `\n- ${work}`;
-            });
-        }
-        
-        if (profile.awards && profile.awards.length > 0) {
-            profileHtml += `\n\n**Awards & Recognition:**`;
-            profile.awards.forEach(award => {
-                profileHtml += `\n- ${award}`;
-            });
-        }
-        
-        if (profile.quote) {
-            profileHtml += `\n\n*"${profile.quote}"*`;
-        }
-        
-        if (profile.interested_facts && profile.interested_facts.length > 0) {
-            profileHtml += `\n\n**Interesting Facts:**`;
-            profile.interested_facts.forEach(fact => {
-                profileHtml += `\n- ${fact}`;
-            });
-        }
-        
-        text.dataset.rawText = profileHtml;
-        text.innerHTML = markdownToHtml(profileHtml);
-
-        const time = document.createElement('div');
-        time.className = 'message-time';
-        time.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-        bubble.append(text, time);
-        message.append(avatar, bubble);
-        elements.messagesContainer.appendChild(message);
-        
-        // Clear input
-        authorInput.value = '';
-        
-        // Save to conversation
-        persistConversationFromDOM();
-        renderChatHistoryList();
-        scrollToBottom();
-        
-        NotificationManager.show(`Found ${profile.name}!`, 'success');
-        
-    } catch (error) {
-        LoadingManager.hide();
-        ErrorHandler.show(error.message);
-        console.error('Author search failed:', error);
-    }
 }
 
 /* ═══════════════════════════════════════════════════════════════

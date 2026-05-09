@@ -1,0 +1,6 @@
+name = "bookwise-ai"
+compatibility_date = "2026-05-10"
+pages_build_output_dir = "public"
+
+[vars]
+BOOKWISE_RUNTIME = "cloudflare-pages"

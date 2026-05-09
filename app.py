@@ -28,7 +28,7 @@ try:
     from utils import (
         generate_id, stream_gemini_response, stream_sse_format, stream_sse_done,
         validate_file_upload, sanitize_filename, get_text_statistics,
-        format_timestamp, extract_code_blocks
+        format_timestamp, extract_code_blocks, is_gemini_quota_error
     )
     HAS_UTILS = True
 except ImportError as e:
@@ -78,6 +78,7 @@ def load_json(filename):
 BOOK_FAQS = load_json("book_faqs.json")
 BOOK_DATA = load_json("book_data.json")
 SYSTEM_PROMPTS = load_json("system_prompts.json")
+AUTHOR_DATA = load_json("author_data.json")
 
 # Initialize database if available
 if HAS_DB:
@@ -241,7 +242,10 @@ def get_gemini_response(user_message, session_id, temperature=0.7, top_p=0.9):
         return response.text
     
     except Exception as e:
-        print(f"❌ Gemini API Error: {e}")
+        if is_gemini_quota_error(e):
+            print(f"⚠️ Gemini quota exhausted, using fallback: {e}")
+        else:
+            print(f"❌ Gemini API Error: {e}")
         return get_fallback_response(user_message)
 
 
@@ -431,6 +435,17 @@ def chat_stream():
                 yield "data: [DONE]\n\n"
             
             except Exception as e:
+                if is_gemini_quota_error(e):
+                    fallback = get_fallback_response(message)
+                    yield f"data: {json.dumps({'type': 'content', 'content': fallback})}\n\n"
+                    conversations[session_id].append({
+                        "role": "assistant",
+                        "content": fallback,
+                        "timestamp": datetime.utcnow().isoformat()
+                    })
+                    yield "data: [DONE]\n\n"
+                    return
+
                 yield f"data: {json.dumps({'error': str(e)})}\n\n"
         
         return Response(
@@ -614,6 +629,87 @@ def get_short_reads():
 def get_trending():
     """Get trending books"""
     return jsonify({"trending": BOOK_DATA.get("trending_books", [])})
+
+
+@app.route("/api/author", methods=["GET"])
+def get_author():
+    """Get author information and introduction"""
+    author_name = request.args.get("name", "").lower().strip()
+    
+    if not author_name:
+        return jsonify({"error": "Author name required"}), 400
+    
+    # Search for author in the database
+    authors = AUTHOR_DATA.get("authors", {})
+    
+    # Try exact match or fuzzy matching
+    found_author = None
+    found_key = None
+    
+    # Try exact key match first
+    for key, author in authors.items():
+        if author.get("name", "").lower() == author_name:
+            found_author = author
+            found_key = key
+            break
+    
+    # If not found, try partial name matching
+    if not found_author:
+        for key, author in authors.items():
+            author_full_name = author.get("name", "").lower()
+            if author_name in author_full_name or author_full_name in author_name:
+                found_author = author
+                found_key = key
+                break
+    
+    if not found_author:
+        # Fall back to Gemini for authors not in knowledge base
+        if GEMINI_API_KEY:
+            try:
+                prompt = f"""Provide a comprehensive introduction for {author_name}. Include:
+- Full name and nationality
+- Birth year, death year (if applicable), and birthplace
+- A brief biography (2-3 paragraphs)
+- Literary style and themes
+- Major works (list of at least 3)
+- Awards and recognition
+- A famous quote
+- 3-4 interesting facts
+- Recommended starting points for different reader types
+
+Format as a detailed author profile."""
+                
+                response = get_gemini_response(prompt, session_id="system", temperature=0.7)
+                return jsonify({
+                    "author": author_name,
+                    "source": "gemini",
+                    "profile": response
+                })
+            except Exception as e:
+                return jsonify({"error": f"Author not found and Gemini unavailable: {str(e)}"}), 404
+        else:
+            return jsonify({"error": f"Author '{author_name}' not found in knowledge base"}), 404
+    
+    # Return author info from knowledge base
+    return jsonify({
+        "author": found_author.get("name", ""),
+        "source": "knowledge_base",
+        "profile": {
+            "name": found_author.get("name", ""),
+            "nationality": found_author.get("nationality", ""),
+            "birth_year": found_author.get("birth_year", ""),
+            "death_year": found_author.get("death_year"),
+            "born_in": found_author.get("born_in", ""),
+            "biography": found_author.get("biography", ""),
+            "literary_style": found_author.get("literary_style", ""),
+            "themes": found_author.get("themes", ""),
+            "major_works": found_author.get("major_works", []),
+            "awards": found_author.get("awards", []),
+            "quote": found_author.get("quote", ""),
+            "interested_facts": found_author.get("interesting_facts", []),
+            "influenced_by": found_author.get("influenced_by", [])
+        }
+    })
 
 
 # ═══════════════════════════════════════════════════════════════

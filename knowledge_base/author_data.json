@@ -1,0 +1,225 @@
+{
+  "authors": {
+    "harper_lee": {
+      "name": "Harper Lee",
+      "birth_year": 1926,
+      "death_year": 2016,
+      "nationality": "American",
+      "born_in": "Monroeville, Alabama",
+      "biography": "Harper Nell Lee was an American novelist best known for her Pulitzer Prize-winning novel To Kill a Mockingbird. Growing up in a small Alabama town during the Great Depression, Lee's experiences deeply influenced her writing about racial injustice and moral courage. She was a close friend of writer Truman Capote and shared his southern Gothic sensibilities. Despite her literary fame, Lee remained private and rarely gave public interviews, living most of her life in her hometown.",
+      "literary_style": "Narrative storytelling, moral clarity, southern Gothic realism",
+      "themes": "Racial injustice, morality, coming-of-age, courage, social inequality",
+      "major_works": [
+        "To Kill a Mockingbird (1960) - Pulitzer Prize winner",
+        "Go Set a Watchman (2015) - Earlier draft published posthumously"
+      ],
+      "awards": ["Pulitzer Prize (1961)", "National Book Award", "UNESCO Prize"],
+      "quote": "You never really understand a person until you consider things from his point of view.",
+      "influenced_by": ["Southern literature", "American realism", "Moral philosophy"],
+      "interesting_facts": [
+        "Took 10 years to write To Kill a Mockingbird",
+        "Only published two novels in her lifetime",
+        "Won the Pulitzer Prize at age 35",
+        "Inspired by the real-life trial of the Scottsboro Boys"
+      ]
+    },
+    "george_orwell": {
+      "name": "George Orwell",
+      "birth_year": 1903,
+      "death_year": 1950,
+      "nationality": "British",
+      "born_in": "Motihari, Bengal (India)",
+      "biography": "Eric Arthur Blair, known by his pen name George Orwell, was a British writer and political commentator. His experiences as colonial police in Burma and his participation in the Spanish Civil War shaped his socialist politics and dystopian fiction. Orwell is celebrated for his clarity of style and his warnings about totalitarianism. He struggled with tuberculosis throughout his life, which ultimately claimed him at just 46 years old.",
+      "literary_style": "Clear prose, political allegory, dystopian fiction, journalistic realism",
+      "themes": "Totalitarianism, political corruption, surveillance, truth, freedom of thought",
+      "major_works": [
+        "1984 (1949) - Dystopian masterpiece",
+        "Animal Farm (1945) - Satirical allegory of Soviet communism",
+        "Down and Out in Paris and London (1933)",
+        "The Road to Wigan Pier (1937)"
+      ],
+      "awards": ["Numerous posthumous recognitions"],
+      "quote": "Freedom is the freedom to say that two plus two make four. If that is granted, all else follows.",
+      "influenced_by": ["Totalitarianism concerns", "Socialist ideals", "Political reporting"],
+      "interesting_facts": [
+        "Used a pen name to hide his identity while traveling as a journalist",
+        "Served in the Spanish Civil War for the socialist POUM militia",
+        "Worked as a colonial police officer in Burma",
+        "Wrote about the need for clear, simple English prose"
+      ]
+    },
+    "jane_austen": {
+      "name": "Jane Austen",
+      "birth_year": 1775,
+      "death_year": 1817,
+      "nationality": "British",
+      "born_in": "Steventon, Hampshire, England",
+      "biography": "Jane Austen was an English novelist known for her witty social commentary and romantic fiction. Born in the 18th century, she wrote during the Regency era and created some of literature's most beloved characters. Her works examine marriage, social class, and women's limited options with sharp humor and keen observation. Though she achieved little fame during her lifetime, she is now recognized as one of the greatest novelists in English literature.",
+      "literary_style": "Ironic wit, social satire, romantic comedy, free indirect discourse",
+      "themes": "Marriage, social class, female agency, love, morality, self-deception",
+      "major_works": [
+        "Pride and Prejudice (1813) - Her most famous novel",
+        "Emma (1815)",
+        "Sense and Sensibility (1811)",
+        "Persuasion (1817)",
+        "Northanger Abbey (1817)",
+        "Mansfield Park (1814)"
+      ],
+      "awards": ["Recognized as one of English literature's greatest novelists"],
+      "quote": "It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.",
+      "influenced_by": ["Romantic era literature", "Social observation", "Domestic comedy"],
+      "interesting_facts": [
+        "Published under 'A Lady' during her lifetime",
+        "Never married, remained close to her family",
+        "Wrote letters with sharp wit about contemporary society",
+        "Her novels were not widely acclaimed until after her death"
+      ]
+    },
+    "arundhati_roy": {
+      "name": "Arundhati Roy",
+      "birth_year": 1961,
+      "nationality": "Indian",
+      "born_in": "Shillong, Meghalaya, India",
+      "biography": "Arundhati Roy is an Indian novelist, screenwriter, and political activist. She won the Booker Prize for her debut novel The God of Small Things, which achieved international acclaim. Since then, she has devoted much of her energy to political activism and essays critiquing globalization, nuclear weapons, and social injustice in India. Roy's work is known for its lyrical prose, attention to marginalized voices, and uncompromising political stance.",
+      "literary_style": "Lyrical prose, magical realism, non-linear narrative, poetic imagery",
+      "themes": "Caste oppression, forbidden love, political corruption, environmental destruction, marginalization",
+      "major_works": [
+        "The God of Small Things (1997) - Booker Prize winner",
+        "The Ministry of Utmost Happiness (2017)",
+        "Collections of political essays and speeches"
+      ],
+      "awards": ["Booker Prize (1997)", "International recognition"],
+      "quote": "To love. To be loved. To never forget your own insignificance.",
+      "influenced_by": ["Indian social realities", "Feminist concerns", "Political activism"],
+      "interesting_facts": [
+        "First Indian woman to win the Booker Prize",
+        "Has written extensively on Kashmir, nuclear weapons, and dams",
+        "Known for her fearless critique of Indian government policies",
+        "Spent years writing her second novel, published 20 years after her first"
+      ]
+    },
+    "salman_rushdie": {
+      "name": "Salman Rushdie",
+      "birth_year": 1947,
+      "nationality": "British-Indian",
+      "born_in": "Bombay, India",
+      "biography": "Salman Rushdie is a British-Indian novelist and essayist known for his imaginative, often surrealist work blending magic realism with political themes. His novel The Satanic Verses sparked international controversy, forcing him into hiding for years. Despite this, Rushdie continues to write prolifically about migration, identity, and cultural hybridity. He represents postcolonial literature that straddles multiple cultures and challenges literary conventions.",
+      "literary_style": "Magical realism, postcolonial narrative, satirical humor, experimental structure",
+      "themes": "Migration, cultural hybridity, identity, religious critique, historical transformation",
+      "major_works": [
+        "Midnight's Children (1981) - Booker Prize winner",
+        "The Satanic Verses (1988) - Controversial",
+        "The Moor's Last Sigh (1995)",
+        "Shame (1983)",
+        "Haroun and the Sea of Stories (1990)"
+      ],
+      "awards": ["Booker Prize (1981)", "Multiple literary honors"],
+      "quote": "What is freedom of expression? Without the freedom to offend, it ceases to exist.",
+      "influenced_by": ["Post-colonial theory", "Indian mythology", "Western literature"],
+      "interesting_facts": [
+        "Lived in hiding for 9 years after The Satanic Verses controversy",
+        "Brings together Indian, Islamic, and Western literary traditions",
+        "Known for weaving history with magical realism",
+        "Has written extensively about migration and cultural displacement"
+      ]
+    },
+    "gabriel_garcia_marquez": {
+      "name": "Gabriel García Márquez",
+      "birth_year": 1927,
+      "death_year": 2014,
+      "nationality": "Colombian",
+      "born_in": "Aracataca, Colombia",
+      "biography": "Gabriel García Márquez was a Colombian novelist and journalist, widely regarded as one of the greatest writers of the 20th century. He is best known for pioneering magical realism, blending the fantastical with the mundane in his narratives. His masterpiece, One Hundred Years of Solitude, is considered a cornerstone of Latin American literature. García Márquez's work explores themes of love, memory, and the human condition against backdrops of political turmoil and magical occurrences.",
+      "literary_style": "Magical realism, cyclical narrative, lyrical prose, temporal fluidity",
+      "themes": "Love and loss, solitude, cyclical time, political violence, family legacy, magic in everyday life",
+      "major_works": [
+        "One Hundred Years of Solitude (1967) - His masterpiece",
+        "Love in the Time of Cholera (1985)",
+        "The Autumn of the Patriarch (1975)",
+        "Chronicle of a Death Foretold (1981)"
+      ],
+      "awards": ["Nobel Prize in Literature (1982)", "Multiple international awards"],
+      "quote": "It was as if God had decided to put to the test every capacity for surprise and was keeping the inhabitants of Macondo in a permanent alternation between doubt and revelation.",
+      "influenced_by": ["Latin American history", "European modernism", "Journalism"],
+      "interesting_facts": [
+        "Won the Nobel Prize at age 55",
+        "Wrote One Hundred Years of Solitude in self-imposed isolation",
+        "Worked as a journalist before becoming a novelist",
+        "His work revolutionized Latin American literature globally"
+      ]
+    },
+    "f_scott_fitzgerald": {
+      "name": "F. Scott Fitzgerald",
+      "birth_year": 1896,
+      "death_year": 1940,
+      "nationality": "American",
+      "born_in": "Saint Paul, Minnesota",
+      "biography": "F. Scott Fitzgerald was an American novelist and short-story writer whose works define the Jazz Age. Fitzgerald captured the disillusionment and excess of the 1920s with elegant prose and complex characters. Though he achieved early success and fame, his later life was marked by personal struggles and financial troubles. His masterpiece, The Great Gatsby, is now considered one of the greatest American novels, though it was not well-received during his lifetime.",
+      "literary_style": "Lyrical prose, social satire, psychological insight, bildungsroman",
+      "themes": "The American Dream, wealth and class, love and loss, moral corruption, nostalgia",
+      "major_works": [
+        "The Great Gatsby (1925) - His masterpiece",
+        "Tender Is the Night (1934)",
+        "This Side of Paradise (1920)",
+        "The Beautiful and Damned (1922)"
+      ],
+      "awards": ["Recognition as a Great American Novelist"],
+      "quote": "So we beat on, boats against the current, borne back ceaselessly into the past.",
+      "influenced_by": ["Jazz Age culture", "American society", "Love and tragedy"],
+      "interesting_facts": [
+        "Named after Francis Scott Key, author of the National Anthem",
+        "The Great Gatsby was considered a commercial failure initially",
+        "Died believing himself a failure as a writer",
+        "His works are now quintessential American literature"
+      ]
+    },
+    "jk_rowling": {
+      "name": "J.K. Rowling",
+      "birth_year": 1965,
+      "nationality": "British",
+      "born_in": "Gloucestershire, England",
+      "biography": "Joanne Rowling, known as J.K. Rowling, is a British novelist best known for the Harry Potter series, which became a global phenomenon. She conceived the idea for Harry Potter while traveling on a train and wrote the first book while living in poverty as a single mother. Her creation transformed children's literature and has sold over 500 million copies worldwide. Beyond Harry Potter, she has explored adult fiction and continues to be a significant cultural figure.",
+      "literary_style": "Fantasy world-building, coming-of-age narrative, mystery elements, character development",
+      "themes": "Good vs. evil, friendship, love, courage, prejudice, mortality, acceptance",
+      "major_works": [
+        "Harry Potter series (7 books, 1998-2007)",
+        "The Casual Vacancy (2012)",
+        "The Cormoran Strike series (as Robert Galbraith)"
+      ],
+      "awards": ["Multiple Hugo Awards", "BAFTA Awards", "Order of the British Empire"],
+      "quote": "It is our choices that show what we truly are, far more than our abilities.",
+      "influenced_by": ["Classical literature", "Fantasy tradition", "Personal experiences"],
+      "interesting_facts": [
+        "Wrote Harry Potter outline in cafes while watching her daughter",
+        "First book rejected by 12 publishers before acceptance",
+        "Created an entire magical world with detailed rules and history",
+        "Harry Potter books are among the best-selling book series of all time"
+      ]
+    },
+    "chinua_achebe": {
+      "name": "Chinua Achebe",
+      "birth_year": 1930,
+      "death_year": 2013,
+      "nationality": "Nigerian",
+      "born_in": "Ogidi, Nigeria",
+      "biography": "Chinua Achebe was a Nigerian novelist, poet, and critic, widely regarded as one of Africa's greatest writers. His novel Things Fall Apart challenged Western narratives about Africa and is considered a masterpiece of postcolonial literature. Achebe's work gave voice to African perspectives and indigenous cultures, reframing colonial history. He was deeply committed to African literature and education, working as an editor and promoting African writers globally.",
+      "literary_style": "Narrative realism, proverbs, oral tradition integration, postcolonial critique",
+      "themes": "Colonialism, cultural clash, tradition vs. modernity, individual vs. community, cultural preservation",
+      "major_works": [
+        "Things Fall Apart (1958) - His most famous work",
+        "No Longer at Ease (1960)",
+        "Arrow of God (1964)",
+        "A Man of the People (1966)"
+      ],
+      "awards": ["Multiple international literary awards", "Recognized as African literature pioneer"],
+      "quote": "If you don't like something, change it. If you can't change it, change the way you think about it.",
+      "influenced_by": ["Nigerian history and culture", "Colonial experience", "Oral traditions"],
+      "interesting_facts": [
+        "Things Fall Apart sold over 10 million copies globally",
+        "First African writer to achieve international recognition",
+        "Survived a car accident that left him partially paralyzed",
+        "Worked to preserve and promote African literature worldwide"
+      ]
+    }
+  }
+}
