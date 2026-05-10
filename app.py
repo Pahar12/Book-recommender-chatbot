@@ -8,6 +8,7 @@ import os
 import json
 import uuid
 import tempfile
+import hashlib
 import re
 import unicodedata
 from datetime import datetime
@@ -62,6 +63,7 @@ CORS(app)
 
 # Configuration
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-pro")
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
 
@@ -106,6 +108,8 @@ if HAS_DB:
 conversations = {}
 uploaded_documents = {}
 user_preferences = {}
+recent_request_cache = {}
+REQUEST_DEDUP_SECONDS = int(os.getenv("REQUEST_DEDUP_SECONDS", "5"))
 
 # RAG pipelines per user (if available)
 rag_pipelines = {} if HAS_UTILS else None
@@ -150,6 +154,52 @@ def track_preferences(session_id, user_message):
     for genre in genres:
         if genre in msg_lower and genre not in prefs["genres"]:
             prefs["genres"].append(genre)
+
+
+def make_request_signature(session_id, message, temperature, top_p):
+    """Create a short-lived request signature for duplicate request suppression."""
+    payload = f"{session_id}|{temperature:.2f}|{top_p:.2f}|{normalize_text(message)}"
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def get_recent_response(session_id, signature):
+    """Return a recently cached response for an identical request, if still fresh."""
+    session_cache = recent_request_cache.get(session_id, {})
+    entry = session_cache.get(signature)
+    if not entry:
+        return None
+
+    age_seconds = (datetime.utcnow() - entry["timestamp"]).total_seconds()
+    if age_seconds > REQUEST_DEDUP_SECONDS:
+        session_cache.pop(signature, None)
+        return None
+
+    return entry["response"]
+
+
+def store_recent_response(session_id, signature, response_text):
+    """Store a short-lived response cache for duplicate request suppression."""
+    if session_id not in recent_request_cache:
+        recent_request_cache[session_id] = {}
+
+    recent_request_cache[session_id][signature] = {
+        "response": response_text,
+        "timestamp": datetime.utcnow(),
+    }
+
+
+def should_use_gemini(message):
+    """Use Gemini only when the prompt needs open-ended generation."""
+    normalized = normalize_text(message)
+    local_first_keywords = [
+        "recommend", "suggest", "beginner", "beginner friendly", "beginner-friendly",
+        "series", "trending", "popular books", "quick reads", "short reads",
+        "motivation", "motivational", "self help", "self-help", "habit",
+        "classic books", "classics", "indian literature", "indian authors",
+        "romance", "thriller", "mystery", "fantasy", "science fiction", "sci fi",
+        "mood based", "mood-based",
+    ]
+    return not any(keyword in normalized for keyword in local_first_keywords)
 
 
 def build_knowledge_context():
@@ -250,7 +300,7 @@ def get_gemini_response(user_message, session_id, temperature=0.7, top_p=0.9):
             top_p=top_p,
             max_output_tokens=1500,
         )
-        model = genai.GenerativeModel("gemini-2.0-flash")
+        model = genai.GenerativeModel(GEMINI_MODEL)
         response = model.generate_content(full_prompt, generation_config=config)
         return response.text
     
@@ -327,6 +377,20 @@ def chat():
             return jsonify({"error": "Message cannot be empty"}), 400
         if len(message) > 5000:
             return jsonify({"error": "Message too long"}), 400
+
+        request_signature = make_request_signature(session_id, message, temperature, top_p)
+        cached_response = get_recent_response(session_id, request_signature)
+        if cached_response:
+            lang = detect_language(message)
+            return jsonify({
+                "success": True,
+                "response": cached_response,
+                "session_id": session_id,
+                "language": lang,
+                "timestamp": datetime.utcnow().isoformat(),
+                "message_count": len(conversations.get(session_id, [])),
+                "source": "dedup-cache",
+            })
         
         # Initialize conversation (in-memory)
         if session_id not in conversations:
@@ -351,7 +415,10 @@ def chat():
         
         # Get response
         lang = detect_language(message)
-        ai_response = get_gemini_response(message, session_id, temperature, top_p)
+        if should_use_gemini(message):
+            ai_response = get_gemini_response(message, session_id, temperature, top_p)
+        else:
+            ai_response = get_fallback_response(message)
         
         # Add AI response
         conversations[session_id].append({
@@ -359,6 +426,8 @@ def chat():
             "content": ai_response,
             "timestamp": datetime.utcnow().isoformat()
         })
+
+        store_recent_response(session_id, request_signature, ai_response)
         
         # If database available, also save to DB
         if HAS_DB:
@@ -392,6 +461,22 @@ def chat_stream():
         
         if not message:
             return jsonify({"error": "Message cannot be empty"}), 400
+
+        request_signature = make_request_signature(session_id, message, temperature, top_p)
+        cached_response = get_recent_response(session_id, request_signature)
+        if cached_response:
+            lang = detect_language(message)
+
+            def cached_generate():
+                yield f"data: {json.dumps({'type': 'meta', 'language': lang, 'session_id': session_id, 'source': 'dedup-cache'})}\n\n"
+                yield f"data: {json.dumps({'type': 'content', 'content': cached_response})}\n\n"
+                yield "data: [DONE]\n\n"
+
+            return Response(
+                stream_with_context(cached_generate()),
+                mimetype='text/event-stream',
+                headers={'X-Accel-Buffering': 'no'}
+            )
         
         # Initialize conversation
         if session_id not in conversations:
@@ -420,8 +505,8 @@ def chat_stream():
 
                 yield f"data: {json.dumps({'type': 'meta', 'language': lang, 'session_id': session_id})}\n\n"
                 
-                if not HAS_UTILS or not GEMINI_API_KEY:
-                    # Fallback non-streaming
+                if not should_use_gemini(message) or not HAS_UTILS or not GEMINI_API_KEY:
+                    # Local-first response to avoid unnecessary Gemini calls
                     response = get_fallback_response(message)
                     full_response = response
                     yield f"data: {json.dumps({'type': 'content', 'content': response})}\n\n"
@@ -437,6 +522,8 @@ def chat_stream():
                     "content": full_response,
                     "timestamp": datetime.utcnow().isoformat()
                 })
+
+                store_recent_response(session_id, request_signature, full_response)
                 
                 # If database available, also save to DB
                 if HAS_DB:

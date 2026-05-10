@@ -25,6 +25,8 @@ const state = {
     currentAbortController: null,
     currentAssistantMessage: null,
     lastUserMessage: '',
+    lastSubmitKey: '',
+    lastSubmitAt: 0,
     listening: false,
     recognition: null,
     conversations: loadConversationStore(),
@@ -113,6 +115,7 @@ function setupEventListeners() {
 
     elements.messageInput.addEventListener('keydown', (event) => {
         if (event.key === 'Enter' && !event.shiftKey) {
+            if (event.repeat || event.isComposing) return;
             event.preventDefault();
             sendMessage();
         }
@@ -260,6 +263,7 @@ async function loadSuggestions() {
             card.className = 'suggestion-card';
             card.textContent = suggestion.text;
             card.addEventListener('click', () => {
+                if (state.isLoading || state.isStreaming) return;
                 elements.messageInput.value = suggestion.prompt;
                 resizeMessageInput();
                 sendMessage();
@@ -534,7 +538,16 @@ function toggleVoiceInput() {
 
 async function sendMessage(overrideMessage = null, isRegenerate = false) {
     const message = (overrideMessage ?? elements.messageInput.value).trim();
-    if (!message || state.isLoading) return;
+    const submitKey = `${state.sessionId}|${message}|${state.temperature}|${state.topP}|${isRegenerate ? 'regen' : 'send'}`;
+    const now = Date.now();
+
+    if (!message || state.isLoading || state.isStreaming) return;
+    if (state.lastSubmitKey === submitKey && now - state.lastSubmitAt < 1200) return;
+
+    state.lastSubmitKey = submitKey;
+    state.lastSubmitAt = now;
+    state.isLoading = true;
+    state.isStreaming = true;
 
     if (!isRegenerate) {
         state.lastUserMessage = message;
@@ -547,8 +560,6 @@ async function sendMessage(overrideMessage = null, isRegenerate = false) {
         resizeMessageInput();
     }
 
-    state.isLoading = true;
-    state.isStreaming = true;
     elements.sendBtn.disabled = true;
     elements.stopBtn.style.display = 'inline-flex';
 

@@ -313,12 +313,12 @@ function shouldUseGemini(message, localResult) {
   ]);
 }
 
-async function callGemini({ apiKey, prompt, temperature, topP, maxOutputTokens = 1200 }) {
+async function callGemini({ apiKey, prompt, temperature, topP, maxOutputTokens = 1200, model = 'gemini-2.5-pro' }) {
   if (!apiKey) {
     throw new Error('Gemini API key not configured');
   }
 
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
   const payload = {
     contents: [{ role: 'user', parts: [{ text: prompt }] }],
     generationConfig: {

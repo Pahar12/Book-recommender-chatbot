@@ -55,6 +55,7 @@ export async function onRequestPost(context) {
         temperature,
         topP,
         maxOutputTokens: 1200,
+        model: context.env.GEMINI_MODEL || 'gemini-2.5-pro',
       });
       source = 'gemini';
     } catch (error) {
